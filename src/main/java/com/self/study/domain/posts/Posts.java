@@ -9,7 +9,8 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor //빈 생성자 자동 추가
 @Entity
-public class Posts {
+public class
+Posts {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) //스프링 부트 2.x 에서는 옵션을 붙여야 auto_increment 가능
     private Long id;
