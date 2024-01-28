@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -45,4 +46,29 @@ public class PostsRepositoryTest {
         assertThat(posts.getContent()).isEqualTo(content);
     }
 
+    //JPA Auditing 테스트
+    @Test
+    public void BaseTimeEntity_등록() {
+        //given
+        //현재 시간을 설정해서 저장
+        LocalDateTime now = LocalDateTime.now();
+        postsRepository.save(Posts.builder()
+                .title("제목")
+                .content("내용")
+                .author("작성자")
+                .build());
+
+        //when
+        //전제 조회
+        List<Posts> postsList = postsRepository.findAll();
+
+        //then
+        //현재 시간보다 등록 시간이 후인지 확인
+        Posts posts = postsList.get(0);
+        System.out.println("현재 시간 = " + now);
+        System.out.println("생성 시간 = " + posts.getCreatedDate());
+        System.out.println("수정 시간= " + posts.getModifiredDate());
+        assertThat(posts.getCreatedDate()).isAfter(now);
+        assertThat(posts.getModifiredDate()).isAfter(now);
+    }
 }
